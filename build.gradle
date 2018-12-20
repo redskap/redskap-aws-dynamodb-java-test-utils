@@ -1,0 +1,162 @@
+plugins {
+    id 'java'
+}
+
+allprojects {
+    group 'io.redskap.aws.dynamodb.java'
+    version '1.0-SNAPSHOT'
+}
+
+//<editor-fold desc="Project Publishing Properties">
+ext.publishProjectName = 'Redskap.io Aws DynamoDB Java Test Utils'
+ext.publishProjectDescription = 'Test Utilities for developing applications with AWS DynamoDB.'
+ext.publishProjectUrl = 'https://github.com/redskap/redskap-aws-dynamodb-java-test-utils'
+ext.publishProjectScmConnection = 'scm:git:git://github.com/redskap/redskap-aws-dynamodb-java-test-utils.git'
+ext.publishProjectScmDevDevConnection = 'scm:git:ssh://github.com:redskap/redskap-aws-dynamodb-java-test-utils.git'
+ext.publishProjectScmUrl = 'https://github.com/redskap/redskap-aws-dynamodb-java-test-utils'
+ext.publishProjectDevelopers = [["redskap", "redskap.io", "info@redskap.io"], ["mracsko", "Balazs Sandor Mracsko", "mracsko@redskap.io"]]
+//</editor-fold>
+
+dependencies {
+    compile 'com.google.guava:guava:26.0-jre'
+    testCompile 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+    testCompile 'org.junit.jupiter:junit-jupiter-params:5.3.1'
+    testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+    testCompile 'com.amazonaws:DynamoDBLocal:1.11.119'
+    testCompile 'com.amazonaws:aws-java-sdk-dynamodb:1.11.434'
+}
+
+repositories {
+    mavenCentral()
+
+    maven {
+        name "DynamoDB Local Release Repository - EU (Frankfurt) Region"
+        url "https://s3.eu-central-1.amazonaws.com/dynamodb-local-frankfurt/release"
+    }
+}
+
+allprojects {
+    pluginManager.withPlugin('java') {
+        apply plugin: 'eclipse'
+        apply plugin: 'idea'
+        apply plugin: 'checkstyle'
+
+        test {
+            useJUnitPlatform()
+            testLogging {
+                events "skipped", "failed"
+            }
+        }
+        checkstyle {
+            toolVersion = "8.14"
+        }
+    }
+}
+
+//<editor-fold desc="Project Publishing Setup">
+allprojects {
+    pluginManager.withPlugin('java') {
+        apply plugin: 'maven-publish'
+        apply plugin: 'signing'
+
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+
+        // Custom install task as alias for local repository deployment
+        task install {
+            dependsOn publishToMavenLocal
+        }
+
+        //<editor-fold desc="JavaDoc & Sources">
+        task sourcesJar(type: Jar) {
+            from sourceSets.main.allJava
+            classifier = 'sources'
+        }
+
+        task javadocJar(type: Jar) {
+            from javadoc
+            classifier = 'javadoc'
+        }
+
+        build.dependsOn sourcesJar
+        build.dependsOn javadocJar
+
+        javadoc {
+            if (JavaVersion.current().isJava9Compatible()) {
+                options.addBooleanOption('html5', true)
+            }
+        }
+        //</editor-fold>
+
+        //<editor-fold desc="Publishing">
+        publishing {
+            publications {
+                mavenJava(MavenPublication) {
+                    from components.java
+                    artifact sourcesJar
+                    artifact javadocJar
+                    pom {
+                        name = publishProjectName
+                        description = publishProjectDescription
+                        url = publishProjectUrl
+
+                        scm {
+                            connection = publishProjectScmConnection
+                            developerConnection = publishProjectScmDevDevConnection
+                            url = publishProjectScmUrl
+                        }
+
+                        licenses {
+                            license {
+                                name = 'The Apache License, Version 2.0'
+                                url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                            }
+                        }
+
+                        developers {
+                            publishProjectDevelopers.each { dev ->
+                                developer {
+                                    id = dev[0]
+                                    name = dev[1]
+                                    email = dev[2]
+                                }
+                            }.collect()
+                        }
+                    }
+                }
+            }
+            repositories {
+                if (project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')) {
+                    maven {
+                        def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                        def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+
+                        credentials {
+                            username = ossrhUsername
+                            password = ossrhPassword
+                        }
+
+                        url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+                    }
+                }
+            }
+        }
+        //</editor-fold>
+
+        //<editor-fold desc="Signing">
+        if (project.hasProperty('signing.keyId')) {
+            signing {
+                sign publishing.publications.mavenJava
+            }
+        }
+
+        tasks.withType(PublishToMavenRepository).each { t ->
+            t.dependsOn build
+        }
+        tasks.withType(PublishToMavenLocal).each { t ->
+            t.dependsOn build
+        }
+        //</editor-fold>
+    }
+}
+//</editor-fold>

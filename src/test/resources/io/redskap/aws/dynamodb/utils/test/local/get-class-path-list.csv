@@ -1,0 +1,5 @@
+classPath,pathSeparator,expected
+"path/a/1/x;path/b/2;path/c/",";","path/a/1/x;path/b/2;path/c/"
+"path/a/1/x",";","path/a/1/x"
+"path/a/1/x:path/b/2:path/c/",":","path/a/1/x;path/b/2;path/c/"
+"path/a/1/x",":","path/a/1/x"

@@ -1,0 +1,37 @@
+osName,runtimeName,expected
+,Java(TM) SE Runtime Environment,linux
+,Java(TM) SE Android Runtime Environment,linux
+Windows 2000,Java(TM) SE Runtime Environment,win32
+Windows 2003,Java(TM) SE Runtime Environment,win32
+Windows XP,Java(TM) SE Runtime Environment,win32
+Windows 98,Java(TM) SE Runtime Environment,win32
+Windows NT,Java(TM) SE Runtime Environment,win32
+Windows Me,Java(TM) SE Runtime Environment,win32
+Windows Vista,Java(TM) SE Runtime Environment,win32
+Windows Windows 7,Java(TM) SE Runtime Environment,win32
+Windows Windows 8,Java(TM) SE Runtime Environment,win32
+Windows Windows 8.1,Java(TM) SE Runtime Environment,win32
+Windows Windows 10,Java(TM) SE Runtime Environment,win32
+Windows 2000,Java(TM) SE Android Runtime Environment,win32
+Windows 2003,Java(TM) SE Android Runtime Environment,win32
+Windows XP,Java(TM) SE Android Runtime Environment,win32
+Windows 98,Java(TM) SE Android Runtime Environment,win32
+Windows NT,Java(TM) SE Android Runtime Environment,win32
+Windows Me,Java(TM) SE Android Runtime Environment,win32
+Windows Vista,Java(TM) SE Android Runtime Environment,win32
+Windows Windows 7,Java(TM) SE Android Runtime Environment,win32
+Windows Windows 8,Java(TM) SE Android Runtime Environment,win32
+Windows Windows 8.1,Java(TM) SE Android Runtime Environment,win32
+Windows Windows 10,Java(TM) SE Android Runtime Environment,win32
+Linux,Java(TM) SE Runtime Environment,linux
+SunOS,Java(TM) SE Runtime Environment,linux
+FreeBSD,Java(TM) SE Runtime Environment,linux
+Linux,Java(TM) SE Android Runtime Environment,android
+SunOS,Java(TM) SE Android Runtime Environment,android
+FreeBSD,Java(TM) SE Android Runtime Environment,android
+Mac OS X,Java(TM) SE Runtime Environment,osx
+OS X,Java(TM) SE Runtime Environment,osx
+Darwin,Java(TM) SE Runtime Environment,osx
+Mac OS X,Java(TM) SE Android Runtime Environment,osx
+OS X,Java(TM) SE Android Runtime Environment,osx
+Darwin,Java(TM) SE Android Runtime Environment,osx
