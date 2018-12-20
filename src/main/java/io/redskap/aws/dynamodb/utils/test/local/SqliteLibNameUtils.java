@@ -21,12 +21,11 @@ public class SqliteLibNameUtils {
   /**
    * Calculates the possible Library Names for finding the proper sqlite4j native library and returns the directory with the most specific matching library.
    *
-   * @param osName The value of <code>"os.name"</code> system property (<code>System.getProperty("os.name")</code>).
+   * @param osName      The value of <code>"os.name"</code> system property (<code>System.getProperty("os.name")</code>).
    * @param runtimeName The value of <code>"java.runtime.name"</code> system property (<code>System.getProperty("java.runtime.name")</code>).
-   * @param osArch The value of <code>"os.arch"</code> system property (<code>System.getProperty("os.arch")</code>).
-   * @param classPath The classpath split into strings by path separator.
-   *               Value of <code>"java.class.path"</code> system property (<code>System.getProperty("os.arch")</code>)
-   *               split by <code>File.pathSeparator</code>.
+   * @param osArch      The value of <code>"os.arch"</code> system property (<code>System.getProperty("os.arch")</code>).
+   * @param classPath   The classpath split into strings by path separator. Value of <code>"java.class.path"</code> system property
+   *                    (<code>System.getProperty("os.arch")</code>) split by <code>File.pathSeparator</code>.
    * @return Matching library directory.
    */
   public static String getLibPath(final String osName, final String runtimeName, final String osArch, final List<String> classPath) {
@@ -36,7 +35,14 @@ public class SqliteLibNameUtils {
     for (final String libName : libNames) {
       for (final String classPathLib : classPath) {
         if (classPathLib.contains(libName)) {
-          return new File(classPathLib).getParent();
+          final String parentDir = new File(classPathLib).getParent();
+
+          if (File.separator.equals("\\")) {
+            // Replace path elements on windows.
+            return parentDir.replace(File.separator, "/");
+          } else {
+            return parentDir;
+          }
         }
       }
     }
@@ -47,9 +53,11 @@ public class SqliteLibNameUtils {
   /**
    * Calculates the possible Library Names for finding the proper sqlite4java native library.
    *
-   * <p>Based on the internal calculation of the sqlite4java wrapper <a href="https://bitbucket.org/almworks/sqlite4java/src/fa4bb0fe7319a5f1afe008284146ac83e027de60/java/com/almworks/sqlite4java/Internal.java?at=master&fileviewer=file-view-default#Internal.java-160">Internal class</a>.
+   * <p>Based on the internal calculation of the sqlite4java wrapper
+   * <a href="https://bitbucket.org/almworks/sqlite4java/src/fa4bb0fe7319a5f1afe008284146ac83e027de60/java/com/almworks/sqlite4java/Internal.java?at=master&fileviewer=file-view-default#Internal.java-160">
+   * Internal class</a>.
    *
-   * @param os Operating System Name used by sqlite4java to get native library.
+   * @param os   Operating System Name used by sqlite4java to get native library.
    * @param arch Operating System Architecture used by sqlite4java to get native library.
    * @return Possible Library Names used by sqlite4java to get native library.
    */
@@ -82,10 +90,12 @@ public class SqliteLibNameUtils {
   /**
    * Calculates the Operating System Architecture for finding the proper sqlite4java native library.
    *
-   * <p>Based on the internal calculation of the sqlite4java wrapper <a href="https://bitbucket.org/almworks/sqlite4java/src/fa4bb0fe7319a5f1afe008284146ac83e027de60/java/com/almworks/sqlite4java/Internal.java?at=master&fileviewer=file-view-default#Internal.java-204">Internal class</a>.
+   * <p>Based on the internal calculation of the sqlite4java wrapper
+   * <a href="https://bitbucket.org/almworks/sqlite4java/src/fa4bb0fe7319a5f1afe008284146ac83e027de60/java/com/almworks/sqlite4java/Internal.java?at=master&fileviewer=file-view-default#Internal.java-204">
+   * Internal class</a>.
    *
    * @param osArch The value of <code>"os.arch"</code> system property (<code>System.getProperty("os.arch")</code>).
-   * @param os Operating System Name used by sqlite4java to get native library.
+   * @param os     Operating System Name used by sqlite4java to get native library.
    * @return Operating System Architecture used by sqlite4java to get native library.
    */
   public static String getArch(final String os, final String osArch) {
@@ -107,9 +117,10 @@ public class SqliteLibNameUtils {
   /**
    * Calculates the Operating System Name for finding the proper sqlite4java native library.
    *
-   * <p>Based on the internal calculation of the sqlite4java wrapper <a href="https://bitbucket.org/almworks/sqlite4java/src/fa4bb0fe7319a5f1afe008284146ac83e027de60/java/com/almworks/sqlite4java/Internal.java?at=master&fileviewer=file-view-default#Internal.java-219">Internal class</a>.*
+   * <p>Based on the internal calculation of the sqlite4java wrapper <a href="https://bitbucket.org/almworks/sqlite4java/src/fa4bb0fe7319a5f1afe008284146ac83e027de60/java/com/almworks/sqlite4java/Internal.java?at=master&fileviewer=file-view-default#Internal.java-219">
+   * Internal class</a>.
    *
-   * @param osName The value of <code>"os.name"</code> system property (<code>System.getProperty("os.name")</code>).
+   * @param osName      The value of <code>"os.name"</code> system property (<code>System.getProperty("os.name")</code>).
    * @param runtimeName The value of <code>"java.runtime.name"</code> system property (<code>System.getProperty("java.runtime.name")</code>).
    * @return Operating System Name used by sqlite4java to get native library.
    */
@@ -139,7 +150,7 @@ public class SqliteLibNameUtils {
   /**
    * Splits classpath string by path separator value.
    *
-   * @param classPath Value of <code>"java.class.path"</code> system property (<code>System.getProperty("os.arch")</code>).
+   * @param classPath     Value of <code>"java.class.path"</code> system property (<code>System.getProperty("os.arch")</code>).
    * @param pathSeparator Value of path separator (<code>File.pathSeparator</code>).
    * @return The list of each classpath elements.
    */
